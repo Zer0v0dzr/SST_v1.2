@@ -21,6 +21,12 @@ let currentPhase = "";
 let currentBlock = 0;
 
 
+// 第二阶段 SST practice 当前是第几次尝试
+// 第一次 = 1
+// 失败重做 = 2, 3, 4...
+let practiceAttempt = 0;
+
+
 
 // trial
 
