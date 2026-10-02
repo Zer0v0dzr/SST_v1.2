@@ -662,30 +662,48 @@ instruction
 function startPractice(){
 
     document
-    .getElementById("response-area")
-    .style.display="flex";
+        .getElementById(
+            "response-area"
+        )
+        .style.display =
+            "flex";
+
 
     currentPhase =
-    "practice";
+        "practice";
 
 
-    currentBlock=0;
+    currentBlock =
+        0;
+
+
+    // 每进入一次第二阶段练习，
+    // attempt +1。
+    //
+    // 第一次进入：1
+    // 第一次失败后重新进入：2
+    // 再失败：3
+    // ...
+
+    practiceAttempt++;
+
+
+    console.log(
+        "Starting SST practice attempt:",
+        practiceAttempt
+    );
 
 
     currentTrialList =
-    experimentPlan.practice;
+        experimentPlan.practice;
 
 
-    currentTrialIndex=0;
-
+    currentTrialIndex =
+        0;
 
 
     runNextTrial();
-
-
-
 }
-
 
 
 
@@ -1886,15 +1904,31 @@ function saveTrial(trial){
             trial.prematureResponse,
 
         trialTimestamp:
-            trial.trialTimestamp
+            trial.trialTimestamp,
+
+
+        // ====================================================
+        // Database-only metadata
+        //
+        // practice:
+        //     1,2,3...
+        //
+        // goPractice / formal:
+        //     0
+        //
+        // data.js 的固定 CSV headers 中没有这个字段，
+        // 所以不会改变最终 CSV 的 15 列。
+        // ====================================================
+
+        practiceAttempt:
+            currentPhase === "practice"
+            ? practiceAttempt
+            : 0
     };
 
 
     // ========================================================
-    // 1. Local copy
-    //
-    // Always save locally FIRST.
-    // This remains the source for CSV backup.
+    // Local data
     // ========================================================
 
     allData.push(
@@ -1903,12 +1937,10 @@ function saveTrial(trial){
 
 
     // ========================================================
-    // 2. Supabase
+    // Supabase background upload
     //
-    // Intentionally NOT awaited.
-    //
-    // Network/database latency must never delay the next trial.
-    // uploadSSTTrial() performs its own retries.
+    // 不 await。
+    // 网络延迟不会阻塞实验 trial timing。
     // ========================================================
 
     uploadSSTTrial(
