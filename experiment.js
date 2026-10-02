@@ -106,102 +106,389 @@ function initExperiment(){
 // ======================================
 
 function showSubjectScreen(){
-    ["instruction-screen", "fixation", "stimulus", "response-area"].forEach(id=>{
-        const element = document.getElementById(id);
-        if(element) element.style.display = "none";
-    });
 
-    const screen = document.createElement("div");
-    screen.id = "subject-screen";
-    Object.assign(screen.style, {
-        position: "fixed", inset: "0", zIndex: "3000",
-        display: "flex", alignItems: "center", justifyContent: "center",
-        backgroundColor: "rgb(128,128,128)", color: "white",
-        fontFamily: "Arial, 'Microsoft YaHei', sans-serif",
-        padding: "24px", boxSizing: "border-box", overflowY: "auto"
-    });
+    [
+        "instruction-screen",
+        "fixation",
+        "stimulus",
+        "response-area"
+    ].forEach(id=>{
 
-    const form = document.createElement("form");
-    form.noValidate = true;
-    Object.assign(form.style, {
-        width: "100%", maxWidth: "420px", textAlign: "center", margin: "auto"
-    });
+        const element =
+            document.getElementById(id);
 
-    const title = document.createElement("h1");
-    title.textContent = "停止信号任务";
-    Object.assign(title.style, {
-        fontSize: "clamp(30px, 5vw, 42px)", margin: "0 0 44px", fontWeight: "bold"
-    });
-
-    const label = document.createElement("label");
-    label.htmlFor = "subject-id-input";
-    label.textContent = "被试编号";
-    Object.assign(label.style, {
-        display: "block", fontSize: "24px", marginBottom: "16px"
-    });
-
-    const input = document.createElement("input");
-    input.id = "subject-id-input";
-    input.type = "text";
-    input.placeholder = "请输入被试编号";
-    input.autofocus = true;
-    input.autocomplete = "off";
-    input.spellcheck = false;
-    input.setAttribute("aria-describedby", "subject-id-error");
-    Object.assign(input.style, {
-        width: "100%", boxSizing: "border-box", padding: "16px 18px",
-        border: "2px solid white", borderRadius: "6px",
-        backgroundColor: "white", color: "#222", fontSize: "24px",
-        textAlign: "center", fontFamily: "inherit", userSelect: "text"
-    });
-
-    const error = document.createElement("div");
-    error.id = "subject-id-error";
-    error.setAttribute("role", "alert");
-    Object.assign(error.style, {
-        minHeight: "30px", margin: "10px 0 22px", fontSize: "20px",
-        lineHeight: "1.5", fontWeight: "bold", color: "#fff0a3"
-    });
-
-    const button = document.createElement("button");
-    button.type = "submit";
-    button.textContent = "开始实验";
-    Object.assign(button.style, {
-        padding: "14px 40px", border: "2px solid white", borderRadius: "6px",
-        backgroundColor: "rgb(100,100,100)", color: "white",
-        fontFamily: "inherit", fontSize: "24px", fontWeight: "bold",
-        cursor: "pointer", touchAction: "manipulation"
-    });
-
-    let submitted = false;
-    form.addEventListener("submit", event=>{
-        event.preventDefault();
-        if(submitted) return;
-        const value = input.value.trim();
-        if(!value){
-            error.textContent = "请输入被试编号";
-            input.setAttribute("aria-invalid", "true");
-            input.style.borderColor = "#fff0a3";
-            input.focus();
-            return;
-        }
-        submitted = true;
-        subjectID = value;
-        screen.remove();
-        showGoInstruction();
-        document.getElementById("response-area").style.display = "flex";
-    });
-    input.addEventListener("input", ()=>{
-        if(input.value.trim()){
-            error.textContent = "";
-            input.removeAttribute("aria-invalid");
-            input.style.borderColor = "white";
+        if(element){
+            element.style.display = "none";
         }
     });
 
-    form.append(title, label, input, error, button);
-    screen.appendChild(form);
-    document.body.appendChild(screen);
+
+    const screen =
+        document.createElement("div");
+
+    screen.id =
+        "subject-screen";
+
+
+    Object.assign(
+        screen.style,
+        {
+            position: "fixed",
+            inset: "0",
+            zIndex: "3000",
+
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+
+            backgroundColor:
+                "rgb(128,128,128)",
+
+            color: "white",
+
+            fontFamily:
+                "Arial, 'Microsoft YaHei', sans-serif",
+
+            padding: "24px",
+
+            boxSizing:
+                "border-box",
+
+            overflowY:
+                "auto"
+        }
+    );
+
+
+    const form =
+        document.createElement("form");
+
+    form.noValidate =
+        true;
+
+
+    Object.assign(
+        form.style,
+        {
+            width: "100%",
+            maxWidth: "420px",
+            textAlign: "center",
+            margin: "auto"
+        }
+    );
+
+
+    const title =
+        document.createElement("h1");
+
+    title.textContent =
+        "停止信号任务";
+
+
+    Object.assign(
+        title.style,
+        {
+            fontSize:
+                "clamp(30px, 5vw, 42px)",
+
+            margin:
+                "0 0 44px",
+
+            fontWeight:
+                "bold"
+        }
+    );
+
+
+    const label =
+        document.createElement("label");
+
+    label.htmlFor =
+        "subject-id-input";
+
+    label.textContent =
+        "被试编号";
+
+
+    Object.assign(
+        label.style,
+        {
+            display: "block",
+            fontSize: "24px",
+            marginBottom: "16px"
+        }
+    );
+
+
+    const input =
+        document.createElement("input");
+
+    input.id =
+        "subject-id-input";
+
+    input.type =
+        "text";
+
+    input.placeholder =
+        "请输入被试编号";
+
+    input.autofocus =
+        true;
+
+    input.autocomplete =
+        "off";
+
+    input.spellcheck =
+        false;
+
+    input.setAttribute(
+        "aria-describedby",
+        "subject-id-error"
+    );
+
+
+    Object.assign(
+        input.style,
+        {
+            width: "100%",
+            boxSizing: "border-box",
+            padding: "16px 18px",
+
+            border:
+                "2px solid white",
+
+            borderRadius:
+                "6px",
+
+            backgroundColor:
+                "white",
+
+            color:
+                "#222",
+
+            fontSize:
+                "24px",
+
+            textAlign:
+                "center",
+
+            fontFamily:
+                "inherit",
+
+            userSelect:
+                "text"
+        }
+    );
+
+
+    const error =
+        document.createElement("div");
+
+    error.id =
+        "subject-id-error";
+
+    error.setAttribute(
+        "role",
+        "alert"
+    );
+
+
+    Object.assign(
+        error.style,
+        {
+            minHeight: "30px",
+            margin: "10px 0 22px",
+            fontSize: "20px",
+            lineHeight: "1.5",
+            fontWeight: "bold",
+            color: "#fff0a3"
+        }
+    );
+
+
+    const button =
+        document.createElement("button");
+
+    button.type =
+        "submit";
+
+    button.textContent =
+        "开始实验";
+
+
+    Object.assign(
+        button.style,
+        {
+            padding:
+                "14px 40px",
+
+            border:
+                "2px solid white",
+
+            borderRadius:
+                "6px",
+
+            backgroundColor:
+                "rgb(100,100,100)",
+
+            color:
+                "white",
+
+            fontFamily:
+                "inherit",
+
+            fontSize:
+                "24px",
+
+            fontWeight:
+                "bold",
+
+            cursor:
+                "pointer",
+
+            touchAction:
+                "manipulation"
+        }
+    );
+
+
+    let submitted =
+        false;
+
+
+    form.addEventListener(
+        "submit",
+        async event=>{
+
+            event.preventDefault();
+
+
+            if(submitted){
+                return;
+            }
+
+
+            const value =
+                input.value.trim();
+
+
+            if(!value){
+
+                error.textContent =
+                    "请输入被试编号";
+
+                input.setAttribute(
+                    "aria-invalid",
+                    "true"
+                );
+
+                input.style.borderColor =
+                    "#fff0a3";
+
+                input.focus();
+
+                return;
+            }
+
+
+            submitted =
+                true;
+
+            subjectID =
+                value;
+
+
+            /*
+             * 创建 Supabase session。
+             *
+             * 最多尝试约数秒。
+             * 即使数据库不可用，
+             * 实验仍然继续，
+             * CSV 仍作为完整本地备份。
+             */
+
+            button.disabled =
+                true;
+
+            button.textContent =
+                "正在准备实验…";
+
+            error.textContent =
+                "";
+
+
+            try{
+
+                await createSSTSession(
+                    subjectID
+                );
+
+            }catch(databaseError){
+
+                console.error(
+                    "Supabase session initialization failed:",
+                    databaseError
+                );
+            }
+
+
+            screen.remove();
+
+
+            showGoInstruction();
+
+
+            document
+                .getElementById(
+                    "response-area"
+                )
+                .style.display =
+                    "flex";
+        }
+    );
+
+
+    input.addEventListener(
+        "input",
+        ()=>{
+
+            if(
+                input.value.trim()
+            ){
+
+                error.textContent =
+                    "";
+
+                input.removeAttribute(
+                    "aria-invalid"
+                );
+
+                input.style.borderColor =
+                    "white";
+            }
+        }
+    );
+
+
+    form.append(
+        title,
+        label,
+        input,
+        error,
+        button
+    );
+
+
+    screen.appendChild(
+        form
+    );
+
+
+    document.body.appendChild(
+        screen
+    );
+
+
     input.focus();
 }
 
@@ -1540,10 +1827,15 @@ function saveTrial(trial){
     }
 
 
-    state.saved = true;
+    state.saved =
+        true;
 
 
-    allData.push({
+    // ========================================================
+    // Construct final trial row
+    // ========================================================
+
+    const trialRow = {
 
         subject:
             subjectID,
@@ -1589,8 +1881,45 @@ function saveTrial(trial){
 
         trialTimestamp:
             trial.trialTimestamp
+    };
+
+
+    // ========================================================
+    // 1. Local copy
+    //
+    // Always save locally FIRST.
+    // This remains the source for CSV backup.
+    // ========================================================
+
+    allData.push(
+        trialRow
+    );
+
+
+    // ========================================================
+    // 2. Supabase
+    //
+    // Intentionally NOT awaited.
+    //
+    // Network/database latency must never delay the next trial.
+    // uploadSSTTrial() performs its own retries.
+    // ========================================================
+
+    uploadSSTTrial(
+        trialRow
+    ).catch(error=>{
+
+        console.error(
+            "Supabase background upload error:",
+            error
+        );
+
     });
 
+
+    // ========================================================
+    // Practice feedback
+    // ========================================================
 
     if(
         currentPhase === "practice" ||
@@ -1603,27 +1932,34 @@ function saveTrial(trial){
     }
 
 
+    // ========================================================
+    // Continue
+    // ========================================================
+
     if(
         currentPhase === "practice" ||
         currentPhase === "goPractice"
     ){
 
-        setTimeout(()=>{
+        setTimeout(
+            ()=>{
 
-            if(
-                activeTrialState !== state
-            ){
-                return;
-            }
-
-
-            activeTrialState =
-                null;
+                if(
+                    activeTrialState !== state
+                ){
+                    return;
+                }
 
 
-            runNextTrial();
+                activeTrialState =
+                    null;
 
-        }, 1000);
+
+                runNextTrial();
+
+            },
+            1000
+        );
 
     }else{
 
@@ -1987,12 +2323,26 @@ function hideStimulus(){
 
 
 function endExperiment(){
-    responseEnabled = false;
-    currentResponseFunction = null;
-    pendingContinue = null;
-    hideStimulus();
-    document.getElementById("response-area").style.display = "none";
 
+    responseEnabled =
+        false;
+
+    currentResponseFunction =
+        null;
+
+    pendingContinue =
+        null;
+
+
+    hideStimulus();
+
+
+    document
+        .getElementById(
+            "response-area"
+        )
+        .style.display =
+            "none";
 
 
     console.log(
@@ -2000,12 +2350,14 @@ function endExperiment(){
     );
 
 
-
     console.table(
         allData
     );
 
 
+    // ========================================================
+    // Local CSV backup
+    // ========================================================
 
     exportCSV(
         allData,
@@ -2013,11 +2365,34 @@ function endExperiment(){
     );
 
 
+    // ========================================================
+    // Mark Supabase session as completed
+    //
+    // Do not await:
+    // the participant should see the end screen immediately.
+    // ========================================================
+
+    completeSSTSession()
+        .catch(error=>{
+
+            console.error(
+                "Supabase completion update error:",
+                error
+            );
+
+        });
+
+
+    // ========================================================
+    // End screen
+    // ========================================================
 
     document
-    .getElementById("experiment")
-    .insertAdjacentHTML(
-        "beforeend",
+        .getElementById(
+            "experiment"
+        )
+        .insertAdjacentHTML(
+            "beforeend",
 
 `
 <div style="
@@ -2029,8 +2404,5 @@ margin-top:25vh;
 实验结束，谢谢参与！
 </div>
 `
-    );
-
-
-
+        );
 }
