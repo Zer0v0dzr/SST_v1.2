@@ -58,7 +58,7 @@ function generateSessionID(){
 
 
 // ============================================================
-// Retry helper
+// Wait helper
 // ============================================================
 
 function wait(ms){
@@ -70,7 +70,7 @@ function wait(ms){
 
 
 // ============================================================
-// Create session
+// Create SST session
 // ============================================================
 
 async function createSSTSession(subjectID){
@@ -79,10 +79,16 @@ async function createSSTSession(subjectID){
         return true;
     }
 
+
     currentSessionID =
         generateSessionID();
 
-    for(let attempt = 1; attempt <= 3; attempt++){
+
+    for(
+        let attempt = 1;
+        attempt <= 3;
+        attempt++
+    ){
 
         try{
 
@@ -90,6 +96,7 @@ async function createSSTSession(subjectID){
                 await supabaseClient
                     .from("sst_sessions")
                     .insert({
+
                         session_id:
                             currentSessionID,
 
@@ -100,6 +107,7 @@ async function createSSTSession(subjectID){
                             false
                     });
 
+
             if(!error){
 
                 console.log(
@@ -109,6 +117,7 @@ async function createSSTSession(subjectID){
 
                 return true;
             }
+
 
             console.error(
                 "Supabase: session creation attempt " +
@@ -127,8 +136,12 @@ async function createSSTSession(subjectID){
             );
         }
 
+
         if(attempt < 3){
-            await wait(1000 * attempt);
+
+            await wait(
+                1000 * attempt
+            );
         }
     }
 
@@ -138,12 +151,13 @@ async function createSSTSession(subjectID){
         "Experiment will continue with local CSV backup."
     );
 
+
     return false;
 }
 
 
 // ============================================================
-// Upload one trial
+// Upload one SST trial
 // ============================================================
 
 async function uploadSSTTrial(trialData){
@@ -169,6 +183,9 @@ async function uploadSSTTrial(trialData){
 
         phase:
             trialData.phase ?? null,
+
+        practice_attempt:
+            trialData.practiceAttempt ?? 0,
 
         block:
             trialData.block ?? null,
@@ -211,7 +228,11 @@ async function uploadSSTTrial(trialData){
     };
 
 
-    for(let attempt = 1; attempt <= 3; attempt++){
+    for(
+        let attempt = 1;
+        attempt <= 3;
+        attempt++
+    ){
 
         try{
 
@@ -220,12 +241,17 @@ async function uploadSSTTrial(trialData){
                     .from("sst_trials")
                     .insert(row);
 
+
             if(!error){
 
                 console.log(
                     "Supabase: trial uploaded:",
                     trialData.phase,
+                    "practice attempt:",
+                    trialData.practiceAttempt ?? 0,
+                    "block:",
                     trialData.block,
+                    "trial:",
                     trialData.trial
                 );
 
@@ -233,19 +259,21 @@ async function uploadSSTTrial(trialData){
             }
 
 
-            /*
-             * PostgreSQL unique violation.
-             * 如果因为网络返回异常而重复提交，
-             * 数据库中已经存在这一 trial，
-             * 就把它视为已经保存成功。
-             */
+            // Duplicate trial:
+            // treat as already saved successfully.
 
-            if(error.code === "23505"){
+            if(
+                error.code === "23505"
+            ){
 
                 console.log(
                     "Supabase: trial already exists:",
                     trialData.phase,
+                    "practice attempt:",
+                    trialData.practiceAttempt ?? 0,
+                    "block:",
                     trialData.block,
+                    "trial:",
                     trialData.trial
                 );
 
@@ -286,12 +314,13 @@ async function uploadSSTTrial(trialData){
         trialData
     );
 
+
     return false;
 }
 
 
 // ============================================================
-// Complete session
+// Complete SST session
 // ============================================================
 
 async function completeSSTSession(){
@@ -306,7 +335,11 @@ async function completeSSTSession(){
     }
 
 
-    for(let attempt = 1; attempt <= 3; attempt++){
+    for(
+        let attempt = 1;
+        attempt <= 3;
+        attempt++
+    ){
 
         try{
 
@@ -314,6 +347,7 @@ async function completeSSTSession(){
                 await supabaseClient
                     .from("sst_sessions")
                     .update({
+
                         completed:
                             true,
 
@@ -367,6 +401,7 @@ async function completeSSTSession(){
     console.warn(
         "Supabase: session completion update failed."
     );
+
 
     return false;
 }
