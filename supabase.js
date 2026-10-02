@@ -345,18 +345,12 @@ async function completeSSTSession(){
 
             const { error } =
                 await supabaseClient
-                    .from("sst_sessions")
-                    .update({
-
-                        completed:
-                            true,
-
-                        completed_at:
-                            new Date().toISOString()
-                    })
-                    .eq(
-                        "session_id",
-                        currentSessionID
+                    .rpc(
+                        "complete_sst_session",
+                        {
+                            p_session_id:
+                                currentSessionID
+                        }
                     );
 
 
@@ -399,7 +393,7 @@ async function completeSSTSession(){
 
 
     console.warn(
-        "Supabase: session completion update failed."
+        "Supabase: session completion failed."
     );
 
 
